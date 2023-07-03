@@ -6,10 +6,8 @@
       </el-header>
       <el-main>
         <Body></Body>
-      </el-main>
-      <el-footer>
         <Footer></Footer>
-      </el-footer>
+      </el-main>
     </el-container>
   </div>
 </template>
@@ -18,12 +16,13 @@
 import Header from '../components/Body/Header.vue'
 import Body from '../components/Body/Body.vue'
 import Footer from '../components/Body/Footer.vue'
+
 export default {
   name: 'Home',
   components: {
     Header,
     Body,
-    Footer,
+    Footer
   },
   props: {
     msg: String

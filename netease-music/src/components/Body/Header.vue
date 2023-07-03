@@ -10,6 +10,10 @@
       <img class="logo" src="../../assets/img/logo.png" />
     </el-menu-item>
     <el-menu-item index="1">Netease Music</el-menu-item>
+    <el-menu-item index="2">发现音乐</el-menu-item>
+    <el-menu-item index="3">推荐歌单</el-menu-item>
+    <el-menu-item index="4">最新音乐</el-menu-item>
+    <el-menu-item index="5">最新 mv</el-menu-item>
     <div class="flex-grow" />
 
     <el-menu-item>
@@ -22,11 +26,11 @@
         ></el-input>
       </div>
     </el-menu-item>
-    <el-sub-menu index="3">
+    <el-sub-menu index="6">
       <template #title>欢迎，{{ username }}</template>
-      <el-menu-item index="3-1">个人中心</el-menu-item>
-      <el-menu-item index="3-2">设置</el-menu-item>
-      <el-menu-item index="3-3">退出登录</el-menu-item>
+      <el-menu-item index="personal center">个人中心</el-menu-item>
+      <el-menu-item index="setting">设置</el-menu-item>
+      <el-menu-item index="logout">退出登录</el-menu-item>
       <!-- <el-sub-menu index="2-4">
         <template #title>item four</template>
         <el-menu-item index="2-4-1">item one</el-menu-item>
@@ -43,7 +47,7 @@ export default {
   data () {
     return {
       activeIndex: "1",
-      username: "Maricle",
+      username: "Miracle",
       search: "",
     }
   },

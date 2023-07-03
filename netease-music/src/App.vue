@@ -26,4 +26,8 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
+.father .el-scrollbar__wrap {
+  overflow-x: hidden;
+}
 </style>
