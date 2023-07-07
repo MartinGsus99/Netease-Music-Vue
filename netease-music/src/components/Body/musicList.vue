@@ -18,7 +18,6 @@
                     text
                     class="button"
                     icon="ArrowRightBold"
-                    @click="playMusic(o.id)"
                   ></el-button>
                 </div>
               </div>
@@ -48,15 +47,21 @@
             <ArrowRightBold color="white" />
           </el-icon>
         </el-col>
-        <el-col :span="18">
+        <el-col :span="1">
           <audio ref="audio" :src="audioSrc"></audio>
-
+        </el-col>
+        <el-col :span="14">
           <el-slider
             v-model="sliderValue"
             :show-tooltip="false"
-            @change="changeSlider"
+            @change="onChangeSlider"
             :step="0.1"
           />
+        </el-col>
+        <el-col :span="2">
+          <span class="time-style"
+            >{{ this.currentTime }}/{{ this.endTime }}</span
+          >
         </el-col>
         <el-col :span="2">
           <el-popover placement="top-start" :width="50" trigger="hover">
@@ -96,17 +101,15 @@ export default {
       currentDate: new Date().toLocaleDateString(),
       audioSrc: "",
       playLists: [],
-      singer: "",
       picUrl: "",
       play: false,
-      duration: 0,
-      endTime: "",
-      currentTime: "",
       sliderValue: 0,
       volumn: 10,
-      playList: [],
       playListIndex: 0,
-      sliderValue: 0,
+      duration: 0,
+      endTime: "00:00",
+      currentTime: "00:00",
+      processBarLength: "",
     }
   },
   methods: {
@@ -130,7 +133,7 @@ export default {
       }
       this.play = !this.play
       this.$refs.audio.volumn = this.volumn
-      if (this.play) {
+      if (this.$refs.audio.paused) {
         this.$refs.audio.play()
       } else {
         this.$refs.audio.pause()
@@ -150,9 +153,6 @@ export default {
     changeVolumn (val) {
       this.$refs.audio.volume = val / 100
       console.log(this.$refs.audio.volume)
-    },
-    changeSlider () {
-
     },
     loadPlayList (id) {
       axios
@@ -194,12 +194,28 @@ export default {
           this.$refs.audio.load()
           setTimeout(() => {
             ElMessage.success('歌曲加载完成~')
+            this.changeSlider()
             this.$refs.audio.play()
           }, 1000)
+          this.play = true
         }).catch((err) => {
           console.log(err)
         })
-    }
+    },
+
+    onChangeSlider () {
+
+    },
+
+    changeSlider () {
+      this.timeLength = this.$refs.audio.duration
+      let minutes = parseInt(this.timeLength / 60)
+      let seconds = parseInt(this.timeLength % 60)
+      this.endTime = minutes + ":" + seconds
+      this.currentTime = "00:00"
+      console.log("歌曲时长：", this.duration)
+
+    },
   },
   mounted () {
     this.loadPlayList(24381616)
@@ -226,7 +242,6 @@ export default {
 
 .button:hover {
   cursor: pointer;
-  background-color: antiquewhite;
 }
 
 .volumn-style {
@@ -260,6 +275,8 @@ export default {
 .button {
   padding: 0;
   min-height: auto;
+  width: 20px;
+  height: 20px;
 }
 
 .image {
@@ -277,5 +294,10 @@ export default {
 
 .card_item :hover {
   cursor: pointer;
+}
+
+.time-style {
+  color: white;
+  font-size: 20px;
 }
 </style>
