@@ -6,7 +6,6 @@
       </el-header>
       <el-main>
         <Body></Body>
-        <Footer></Footer>
       </el-main>
     </el-container>
   </div>
