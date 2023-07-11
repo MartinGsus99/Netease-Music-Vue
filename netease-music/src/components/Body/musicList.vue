@@ -14,11 +14,7 @@
                 <span class="song_name">{{ o.name }}</span>
                 <div class="bottom">
                   <time class="time">{{ new Date(o.publishTime) }}</time>
-                  <el-button
-                    text
-                    class="button"
-                    icon="ArrowRightBold"
-                  ></el-button>
+                  <el-button text icon="ArrowRightBold"></el-button>
                 </div>
               </div>
             </el-card>
@@ -28,71 +24,63 @@
     </div>
 
     <div class="audio-bar-wrapper">
-      <el-row justify="space-around" class="audio-bar-container">
-        <el-col :span="1">
+      <div class="icon-wrapper">
+        <div class="button-wrapper">
           <el-icon @click="preSong" class="button">
             <ArrowLeftBold color="white" />
           </el-icon>
-        </el-col>
-        <el-col :span="1">
+        </div>
+        <div class="button-wrapper">
           <el-icon v-if="play" @click="pause" class="button">
             <VideoPause color="white" />
           </el-icon>
           <el-icon v-if="!play" @click="pause" class="button">
             <VideoPlay color="white" />
           </el-icon>
-        </el-col>
-        <el-col :span="1">
+        </div>
+        <div class="button-wrapper">
           <el-icon @click="nextSong" class="button">
             <ArrowRightBold color="white" />
           </el-icon>
-        </el-col>
-        <el-col :span="1">
-          <audio ref="audio" :src="audioSrc"></audio>
-        </el-col>
-        <el-col :span="14">
+        </div>
+      </div>
+
+      <audio ref="audio" :src="audioSrc"></audio>
+
+      <div class="slider-wrapper">
+        <span class="title">{{ "相遇" }}</span>
+        <div class="slider-container">
           <el-slider
             v-model="sliderValue"
-            :show-tooltip="false"
-            @change="onChangeSlider"
-            :step="0.1"
-          />
-        </el-col>
-        <el-col :span="2">
-          <span class="time-style"
-            >{{ this.currentTime }}/{{ this.endTime }}</span
-          >
-        </el-col>
-        <el-col :span="2">
-          <el-popover placement="top-start" :width="50" trigger="hover">
-            <el-slider
-              v-model="volumn"
-              :show-tooltip="false"
-              @change="changeVolumn"
-              :step="5"
-              vertical
-              height="120px"
-            />
-            <template #reference>
-              <el-button class="m-2" type="primary">
-                <el-icon class="button">
-                  <BellFilled color="white" />
-                </el-icon>
-              </el-button>
-            </template>
-            <template></template>
-          </el-popover>
-        </el-col>
-        <el-col :span="1">
-          <div class="volumn-style">{{ this.volumn }}</div>
-        </el-col>
-      </el-row>
+            :min="0"
+            :max="100"
+            :step="1"
+            style="
+               {
+                --el-slider-main-bg-color: #5240ff;
+              }
+            "
+            @change="changeSlider"
+          ></el-slider>
+        </div>
+      </div>
+
+      <div class="volumn-wrapper">
+        <span v-if="!play" class="time-wrapper">未播放歌曲</span>
+        <span v-if="play" class="time-wrapper"
+          >{{ this.currentTime }}/{{ this.endTime }}</span
+        >
+        <el-icon><Bell color="white" /></el-icon>
+        <span class="volumn-slider-wrapper">{{ this.volumn }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ElMessage } from 'element-plus'
+import {
+  ElMessage
+} from 'element-plus'
 import axios from 'axios'
 export default {
   name: "MusicList",
@@ -110,6 +98,7 @@ export default {
       endTime: "00:00",
       currentTime: "00:00",
       processBarLength: "",
+      musicName: "",
     }
   },
   methods: {
@@ -176,7 +165,6 @@ export default {
         .then((res) => {
           console.log(res)
           if (res.data.message == "ok") {
-            console.log("Playing")
             this.loadingSourceToAudioPlayer(id)
           } else {
             ElMessage.error(res.data.message)
@@ -188,13 +176,14 @@ export default {
     loadingSourceToAudioPlayer (id) {
       axios.get('http://127.0.0.1:3000/song/url/v1?id=' + id + '&level=exhigh')
         .then((res) => {
-          console.log(res.data.data[0].url)
+          console.log(res.data)
           this.$refs.audio.pause()
           this.audioSrc = res.data.data[0].url
           this.$refs.audio.load()
           setTimeout(() => {
             ElMessage.success('歌曲加载完成~')
             this.changeSlider()
+            this.musicName = res.data.data[0].id
             this.$refs.audio.play()
           }, 1000)
           this.play = true
@@ -224,32 +213,6 @@ export default {
 </script>
 
 <style>
-.audio-bar-wrapper {
-  width: 100%;
-  height: 70px;
-  background-color: rgb(64, 158, 255);
-  position: fixed;
-  padding: 30px 0 30px 0;
-  bottom: 0px;
-  left: 0px;
-}
-
-.audio-bar-container {
-  width: 100%;
-  height: 100%;
-  padding: 30px 0 30px 0;
-}
-
-.button:hover {
-  cursor: pointer;
-}
-
-.volumn-style {
-  color: white;
-  align-items: center;
-  padding: 6px 0px;
-}
-
 .body-container {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -257,11 +220,6 @@ export default {
 
 .body-container .el-scrollbar {
   overflow-x: hidden;
-}
-
-.time {
-  font-size: 12px;
-  color: #999;
 }
 
 .bottom {
@@ -296,8 +254,58 @@ export default {
   cursor: pointer;
 }
 
-.time-style {
+.audio-bar-wrapper {
+  width: 100%;
+  height: 70px;
+  background-color: rgb(64, 158, 255);
+  position: fixed;
+  padding: 30px 0 30px 0;
+  bottom: 0px;
+  left: 0px;
+  display: flex;
+  flex-direction: row;
+}
+
+.audio-bar-wrapper .icon-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  padding: 30px 0 30px 0;
+}
+
+.audio-bar-wrapper .icon-wrapper .button-wrapper {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  flex-flow: 1;
+}
+
+.audio-bar-wrapper .slider-wrapper {
+  flex-grow: 3;
+  padding: 0px 0 30px 0;
+}
+
+.audio-bar-wrapper .slider-wrapper .title {
   color: white;
-  font-size: 20px;
+  text-align: center;
+}
+
+.audio-bar-wrapper .volumn-wrapper {
+  flex-grow: 1;
+  padding: 25px 0 30px 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.audio-bar-wrapper .volumn-wrapper .time-wrapper {
+  flex-grow: 1;
+  color: white;
+}
+
+.audio-bar-wrapper .volumn-wrapper .volumn-slider-wrapper {
+  flex-grow: 1;
+  padding: 0px 0 0px 0;
+  color: white;
+  text-align: left;
 }
 </style>

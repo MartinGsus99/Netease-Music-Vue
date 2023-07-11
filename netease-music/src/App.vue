@@ -6,7 +6,6 @@
 import Home from './views/Home.vue'
 import { ElMessage } from 'element-plus'
 
-
 export default {
   name: 'App',
   components: {
