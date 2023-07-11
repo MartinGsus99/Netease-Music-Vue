@@ -21,7 +21,7 @@
         <el-autocomplete
           v-model="keywords"
           :fetch-suggestions="querySearchAsync"
-          placeholder="Please input"
+          placeholder="搜索"
           @select="handleSelect"
         />
       </div>

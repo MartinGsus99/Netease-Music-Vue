@@ -9,11 +9,11 @@
               :body-style="{ padding: '0px' }"
               class="card_item"
             >
-              <img :src="o.al.picUrl" class="image" />
+              <img :src="o.coverImgUrl" class="image" />
               <div style="padding: 14px">
                 <span class="song_name">{{ o.name }}</span>
                 <div class="bottom">
-                  <time class="time">{{ new Date(o.publishTime) }}</time>
+                  <time class="time">{{ o.updateTime }}</time>
                   <el-button text icon="ArrowRightBold"></el-button>
                 </div>
               </div>
@@ -145,9 +145,9 @@ export default {
     },
     loadPlayList (id) {
       axios
-        .get('http://127.0.0.1:3000/playlist/detail?id=' + id)
-        .then(response => (
-          this.playLists = response.data.playlist.tracks
+        .get('http://127.0.0.1:3000/top/playlist/highquality?cat=' + '华语')
+        .then((response) => (
+          this.playLists = response.data.playlists
         ))
         .catch(function (error) { // 请求失败处理
           console.log(error)
@@ -246,7 +246,7 @@ export default {
 .song_name {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font: 800;
-  font-size: 30px;
+  font-size: 15px;
   color: rgb(64, 158, 255);
 }
 
