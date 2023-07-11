@@ -18,12 +18,12 @@
 
     <el-menu-item>
       <div class="input-container">
-        <el-input
-          v-model="search"
-          placeholder="搜索"
-          prefix-icon="el-icon-search"
-          size="small"
-        ></el-input>
+        <el-autocomplete
+          v-model="keywords"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="Please input"
+          @select="handleSelect"
+        />
       </div>
     </el-menu-item>
     <el-sub-menu index="6">
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: "Header",
   data () {
@@ -49,12 +50,39 @@ export default {
       activeIndex: "1",
       username: "Miracle",
       search: "",
+      keywords: '',
     }
   },
   methods: {
     handleSelect (key, keyPath) {
       console.log(key, keyPath)
     },
+    querySearchAsync (keywords, cb) {
+      axios.get('http://127.0.0.1:3000/search/suggest?keywords=' + keywords)
+        .then((res) => {
+          if (res.data.code == 200) {
+            console.log(res.data.result)
+            let result = res.data.result
+            if (result.hasOwnProperty('songs')) {
+              const results = result.songs
+              console.log(results)
+              setTimeout(() => {
+                let data = results.map((item) => {
+                  return {
+                    value: item.name + '-' + item.artists[0].name,
+                    label: item.id,
+                  }
+                })
+                cb(data)
+              }, 1000)
+            }
+          }
+        })
+    },
+    handleSelect (item) {
+      //播放音乐
+      console.log(item)
+    }
   },
 };
 </script>
