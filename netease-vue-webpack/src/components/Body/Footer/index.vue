@@ -1,62 +1,46 @@
 <template lang="">
-  <div>
-    <div class="audio-bar-wrapper">
-      <div class="icon-wrapper">
-        <div class="button-wrapper">
-          <el-icon @click="preSong" class="button">
-            <ArrowLeftBold color="white" />
-          </el-icon>
-        </div>
-        <div class="button-wrapper">
-          <el-icon v-if="play" @click="pause" class="button">
-            <VideoPause color="white" />
-          </el-icon>
-          <el-icon v-if="!play" @click="pause" class="button">
-            <VideoPlay color="white" />
-          </el-icon>
-        </div>
-        <div class="button-wrapper">
-          <el-icon @click="nextSong" class="button">
-            <ArrowRightBold color="white" />
-          </el-icon>
-        </div>
+<div>
+  <div class="audio-bar-wrapper">
+    <div class="icon-wrapper">
+      <div class="button-wrapper">
+        <i class="el-icon-d-arrow-left" style="color: white" @click="preSong"></i>
       </div>
+      <div class="button-wrapper">
+        <i v-if="play" class="el-icon-video-play" style="color: white" @click="pause"></i>
+        <i v-if="!play" class="el-icon-video-pause" style="color: white" @click="pause"></i>
+      </div>
+      <div class="button-wrapper">
+        <i class="el-icon-d-arrow-right" style="color: white" @click="nextSong"></i>
+      </div>
+    </div>
 
-      <audio ref="audio" :src="audioSrc"></audio>
-
-      <div class="slider-wrapper">
-        <span class="title">{{ musicName() }}</span>
-        <div class="slider-container">
-          <el-slider
-            v-model="sliderValue"
-            :min="0"
-            :max="100"
-            :step="1"
-            style="
+    <div class="slider-wrapper">
+      <span class="title">{{ musicName }}</span>
+      <div class="slider-container">
+        <el-slider v-model="sliderValue" :min="0" :max="100" :step="1" style="
                {
                 --el-slider-main-bg-color: #5240ff;
               }
-            "
-            @change="changeSlider"
-          ></el-slider>
-        </div>
-      </div>
-
-      <div class="volumn-wrapper">
-        <span v-if="!play" class="time-wrapper">00:00</span>
-        <span v-if="play" class="time-wrapper"
-          >{{ this.currentTime }}/{{ this.endTime }}</span
-        >
-        <el-icon><Bell color="white" /></el-icon>
-        <span class="volumn-slider-wrapper">{{ this.volumn }}</span>
+            " @change=""></el-slider>
       </div>
     </div>
+
+    <div class="volumn-wrapper">
+      <span v-if="!play" class="time-wrapper">00:00</span>
+      <span v-if="play" class="time-wrapper">{{ this.currentTime }}/{{ this.endTime }}</span>
+      <i class="el-icon-bell" style="color: white" @click=""></i>
+      <span class="volumn-slider-wrapper">{{ this.volumn }}</span>
+    </div>
   </div>
-  </div>
+
+</div>
+
+
 </template>
+
 <script>
-import { store } from '@/utils/store.js'
-console.log("Musicname:", store.musicName)
+import store from '@/utils/store.js'
+
 export default {
   name: "Footer",
   data () {
@@ -69,23 +53,28 @@ export default {
       endTime: "00:00",
       currentTime: "00:00",
       processBarLength: "",
+      audio: {
+        name: '东西（Cover：林俊呈）',
+        artist: '纳豆',
+        url: 'https://cdn.moefe.org/music/mp3/thing.mp3',
+        cover: 'https://p1.music.126.net/5zs7IvmLv7KahY3BFzUmrg==/109951163635241613.jpg?param=300y300', // prettier-ignore
+        lrc: 'https://cdn.moefe.org/music/lrc/thing.lrc',
+      },
+    }
+  },
+  computed: {
+    musicName () {
+      return store.getters.getMusicName
+    },
+    musicId () {
+      return store.getters.getMusicId
     }
   },
   watch: {
-    musicId: {
-      handler (newVal, oldVal) {
-        console.log(newVal, oldVal)
-      },
-      deep: true,
-      immediate: true
-    }
-  },
-  compouted: {
-    musicName () {
-      return store.musicName
-    },
-    musicId () {
-      return store.musicId
+    musicId (newId) {
+      // musicName发生变化时的响应逻辑
+      console.log('musicName changed:', newId)
+      this.queryMusicSource(newId)
     }
   },
   methods: {
@@ -114,7 +103,6 @@ export default {
       } else {
         this.$refs.audio.pause()
       }
-
     },
     nextSong () {
       console.log("nextSong")
@@ -126,26 +114,36 @@ export default {
       }
       this.$refs.audio.play()
     },
-    changeVolumn (val) {
-      this.$refs.audio.volume = val / 100
-      console.log(this.$refs.audio.volume)
-    },
-    changeSlider () {
-      this.timeLength = this.$refs.audio.duration
-      let minutes = parseInt(this.timeLength / 60)
-      let seconds = parseInt(this.timeLength % 60)
-      this.endTime = minutes + ":" + seconds
-      this.currentTime = "00:00"
-      console.log("歌曲时长：", this.duration)
-
-    },
-    musicName () {
-      return store.musicId + ' ' + store.musicName
-    },
+    queryMusicSource (id) {
+      this.axios.get('http://127.0.0.1:3000/check/music?id=' + 33894312)
+        .then((res) => {
+          let data = res.data
+          if (!data.success) {
+            this.$message.error(data.message)
+          } else {
+            this.axios.get('http://127.0.0.1:3000/song/url/v1?id=' + 33894312 + '&level=lossless')
+              .then((res) => {
+                console.log(res.data.code)
+                if (res.data.code == 200) {
+                  this.audioSrc = res.data.url
+                  // this.$refs.audio.volumn = 20
+                  // this.$refs.audio.load()
+                  setTimeout(() => {
+                    this.$message.success("加载成功~")
+                    // this.$refs.audio.play()
+                  }, 2000)
+                } else {
+                  this.$message.error("没有获取到资源链接~")
+                }
+              })
+          }
+        })
+    }
   },
 
 }
 </script>
+
 <style lang="css">
 .bottom {
   margin-top: 13px;

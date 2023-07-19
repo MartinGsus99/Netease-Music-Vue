@@ -17,7 +17,7 @@
           <template #default="scope">
             <el-button
               size="small"
-              @click="playMusic(scope.row.id, scope.row.name)"
+              @click="PlayMusic(scope.row.id, scope.row.name)"
               >播放</el-button
             >
           </template>
@@ -27,7 +27,8 @@
   </div>
 </template>
 <script>
-import { store } from '@/utils/store.js'
+
+import store from '@/utils/store.js'
 
 export default {
   name: 'Playlist',
@@ -63,16 +64,11 @@ export default {
           console.log(error)
         })
     },
-    playMusic (id, name) {
-      store.changeMusicId(id)
-      store.changeMusicName(name)
-      console.log('Musicname:', store.musicName)
-      console.log('MusicId:', store.musicId)
-
-    },
-
-
-
+    PlayMusic (id, song_name) {
+      console.log("Playing:", id, song_name)
+      store.dispatch('updateMusicId', id)
+      store.dispatch('updateMusicName', song_name) // 调用action更新全局变量的值
+    }
   }
 }
 
