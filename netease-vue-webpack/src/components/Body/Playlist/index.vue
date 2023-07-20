@@ -1,29 +1,28 @@
 <template>
-  <div>
-    <div v-show="true">
-      <el-table
-        :data="playlist"
-        height="900"
-        style="width: 100%"
-        :cell-style="{ textAlign: 'center' }"
-        :header-cell-style="{ 'text-align': 'center' }"
-      >
-        <el-table-column prop="id" label="ID" width="180" />
-        <el-table-column prop="name" label="歌名" width="180" />
-        <el-table-column prop="album" label="专辑" width="180" />
-        <el-table-column prop="artist" label="歌手" width="180" />
-        <el-table-column prop="img" label="封面" />
-        <el-table-column label="操作">
-          <template #default="scope">
-            <el-button
-              size="small"
-              @click="PlayMusic(scope.row.id, scope.row.name)"
-              >播放</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+  <div class="playlist-container">
+    <el-table
+      :scrollbar="scrollbarOptions"
+      :data="playlist"
+      height="100%"
+      :max-height="tableHeight"
+      :cell-style="{ textAlign: 'center' }"
+      :header-cell-style="{ 'text-align': 'center' }"
+    >
+      <el-table-column prop="id" label="ID" width="180" />
+      <el-table-column prop="name" label="歌名" width="180" />
+      <el-table-column prop="album" label="专辑" width="180" />
+      <el-table-column prop="artist" label="歌手" width="180" />
+      <el-table-column prop="img" label="封面" />
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-button
+            size="small"
+            @click="PlayMusic(scope.row.id, scope.row.name)"
+            >播放</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 <script>
@@ -41,6 +40,11 @@ export default {
   data () {
     return {
       playlist: [],
+      tableHeight: '800px', // 表格的高度
+      scrollbarOptions: {
+        disabled: true, // 禁用默认的滚动条
+        width: '0px' // 隐藏滚动条宽度
+      }
     }
   },
   methods: {
@@ -74,4 +78,8 @@ export default {
 
 </script>
 <style lang="">
+.playlist-container {
+  height: 835px;
+  overflow: hidden;
+}
 </style>

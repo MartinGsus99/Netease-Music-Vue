@@ -5,20 +5,18 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import APlayer from '@moefe/vue-aplayer'
 
 
 import '@/utils/axios'
 import axios from "axios"
 import VueAxios from "vue-axios"
 import store from '@/utils/store'
+import VueAudio from 'vue-audio-better'
 
+Vue.use(VueAudio)
 Vue.use(VueAxios, axios)
 Vue.use(ElementUI)
-Vue.use(APlayer, {
-  defaultCover: 'https://github.com/u3u.png',
-  productionTip: true,
-})
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

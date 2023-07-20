@@ -4,6 +4,7 @@ import Index from '@/components/index.vue'
 import Sheets from '@/components/Body/Sheets/index.vue'
 import Login from '@/components/Login/index.vue'
 import Playlist from '@/components/Body/Playlist/index.vue'
+import Audio from '@/components/Audio/index.vue'
 
 const NotFound = { template: '<div>Page Not Found</div>' }
 
@@ -17,6 +18,11 @@ export default new Router({
       path: '/',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/audio',
+      name: 'Audio',
+      component: Audio
     },
     {
       path: '/home',
