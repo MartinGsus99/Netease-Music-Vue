@@ -40,7 +40,7 @@ export default {
   data () {
     return {
       playlist: [],
-      tableHeight: '800px', // 表格的高度
+      tableHeight: '1000px', // 表格的高度
       scrollbarOptions: {
         disabled: true, // 禁用默认的滚动条
         width: '0px' // 隐藏滚动条宽度
@@ -50,12 +50,12 @@ export default {
   methods: {
     loadPlayList (sheetId) {
       this.axios
-        .get('http://127.0.0.1:3000/playlist/track/all?id=' + sheetId)
+        .get('/playlist/track/all?id=' + sheetId + '&limit=100&offset=1' + '&timestamp=' + new Date().getTime())
         .then((response) => {
           this.playlist = []
           response.data.songs.map((item) => {
             let songInfor = {
-              id: item.al.id,
+              id: item.id,
               name: item.name,
               album: item.al.name,
               artist: item.ar[0].name,

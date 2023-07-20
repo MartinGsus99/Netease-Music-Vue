@@ -1,10 +1,11 @@
 <template lang="">
-  <Audio :songName="songName" :audioSrc="audioSrc"></Audio>
+  <Audio ref="audioPlayer" :songName="songName" :audioSrc="audioSrc"></Audio>
 </template>
 
 <script>
 import store from '@/utils/store.js'
 import Audio from '@/components/Audio/index.vue'
+import axios from '@/utils/axios'
 export default {
   name: "Footer",
   components: {
@@ -40,24 +41,20 @@ export default {
     },
   },
   methods: {
-
     queryMusicSource (id) {
-      this.axios.get('http://127.0.0.1:3000/check/music?id=' + id)
+      this.axios.get('/check/music?id=' + id)
         .then((res) => {
           let data = res.data
           if (!data.success) {
             this.$message.error(data.message)
           } else {
-            this.axios.get('http://127.0.0.1:3000/song/url/v1?id=' + id + '&level=lossless')
+            this.axios.get('/song/url/v1?id=' + id + '&level=hires')
               .then((res) => {
-                console.log(res.data.data)
                 if (res.data.code == 200) {
                   this.audioSrc = res.data.data[0].url
-
                   setTimeout(() => {
                     this.$message.success("加载成功~")
-
-                  }, 2000)
+                  }, 500)
                 } else {
                   this.$message.error("没有获取到资源链接~")
                 }

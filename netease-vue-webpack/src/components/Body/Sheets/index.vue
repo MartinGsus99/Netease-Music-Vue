@@ -22,7 +22,7 @@
 </template>
 
 <script>
-
+import axios from "@/utils/axios.js"
 export default {
   name: "Body",
   data () {
@@ -39,12 +39,15 @@ export default {
   },
   methods: {
     loadPlaySheets (styleTag) {
-      let url1 = 'http://127.0.0.1:3000/top/playlist/highquality?cat= 民谣&limit=100'
-      let url2 = 'http://127.0.0.1:3000/top/playlist/hot'
+      let url1 = '/top/playlist/highquality?cat= 民谣&limit=100'
+      let url2 = '/top/playlist/hot'
+      let url3 = '/user/playlist?uid=' + 418165896
+
       this.axios
-        .get(url2)
+        .get(url3)
         .then((response) => (
-          this.sheets = response.data.playlists
+          console.log(response.data.playlist),
+          this.sheets = response.data.playlist
         ))
         .catch(function (error) { // 请求失败处理
           console.log(error)

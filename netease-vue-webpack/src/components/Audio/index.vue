@@ -20,7 +20,7 @@
       </div>
       <audio
         ref="audioPlayer"
-        :src="currentTrack.url"
+        :src="audioSrc"
         @timeupdate="updateProgress"
         autoplay
       ></audio>
@@ -46,9 +46,7 @@ export default {
       isPlaying: false,
       progress: 0,
       totalDuration: 0,
-      currentTrack: {
-        url: 'http://m8.music.126.net/20230719172740/18937dacd680e23dcbf982797dea5610/ymusic/c48c/fb99/1950/a0634034446f904929e37dc2686ba91b.mp3'
-      }
+    
     }
   },
   mounted () {

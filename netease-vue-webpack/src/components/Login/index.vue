@@ -10,7 +10,7 @@
 </template>
 <script>
 import QRCode from 'qrcodejs2'
-import axios from 'axios'
+import axios from '@/utils/axios.js'
 export default {
   name: "Login",
   data () {
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     generateQRCode: function () {
-      axios.get('http://127.0.0.1:3000/login/qr/key').then((res) => {
+      axios.get('/login/qr/key').then((res) => {
         if (res.data.code == 200) {
           let unikey = res.data.data.unikey
           this.loginKey = unikey
@@ -39,7 +39,7 @@ export default {
     },
 
     getQRCode: function (unikey) {
-      axios.get('http://127.0.0.1:3000/login/qr/create?key=' + unikey).then((res) => {
+      axios.get('/login/qr/create?key=' + unikey).then((res) => {
         console.log(res)
         if (res.data.code == 200) {
           let qrcodeImg = res.data.data.qrurl
@@ -60,7 +60,7 @@ export default {
     },
 
     qrcodeScanStatus (unikey) {
-      axios.get('http://127.0.0.1:3000/login/qr/check?key=' + unikey).then((res) => {
+      axios.get('/login/qr/check?key=' + unikey).then((res) => {
         console.log(res.data.code)
         let code = res.data.code
         if (code == 800) {

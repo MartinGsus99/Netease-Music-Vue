@@ -1,22 +1,12 @@
 <template lang="">
-<!-- <el-container>
-    <el-header>
-      <Header></Header>
-    </el-header>
-    <el-main>
-      <router-view>
-        <Sheets></Sheets>
-      </router-view>
-      <Footer class='footer-wrapper'></Footer>
-    </el-main>
-</el-container> -->
-
 <div class='container'>
   <Header></Header>
   <router-view>
     <Sheets></Sheets>
   </router-view>
-  <Footer class='footer-wrapper'></Footer>
+  <div class='footer-wrapper'>
+    <Footer></Footer>
+  </div>
 </div>
 </template>
 
@@ -52,5 +42,15 @@ export default {
 /* 适用于Webkit浏览器（Chrome，Safari等） */
 .content::-webkit-scrollbar {
   display: none; /* 隐藏滚动条 */
+}
+
+.footer-wrapper {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 150px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
 }
 </style>
